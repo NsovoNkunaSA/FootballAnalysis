@@ -14,18 +14,61 @@ response = requests.get(
     timeout=30
 )
 
-print("Status:", response.status_code)
-
 response.raise_for_status()
 
 data = response.json()
 
-matches = data["matches"]
+df = pd.DataFrame(data["matches"])
 
-df = pd.DataFrame(matches)
+# Convert scores to numbers
+df["home_score"] = pd.to_numeric(df["home_score"], errors="coerce")
+df["away_score"] = pd.to_numeric(df["away_score"], errors="coerce")
 
-print("\nMatches:")
-print(df)
+print("\n===== FOOTBALL ANALYSIS =====")
 
-print("\nColumns:")
-print(df.columns.tolist())
+print("Total matches:", len(df))
+
+print(
+    "Finished matches:",
+    (df["status"] == "finished").sum()
+)
+
+print(
+    "Live matches:",
+    (df["status"] == "live").sum()
+)
+
+print(
+    "Upcoming matches:",
+    (df["status"] == "upcoming").sum()
+)
+
+print(
+    "Total goals:",
+    df["home_score"].fillna(0).sum()
+    + df["away_score"].fillna(0).sum()
+)
+
+print(
+    "Average goals per match:",
+    round(
+        (
+            df["home_score"].fillna(0)
+            + df["away_score"].fillna(0)
+        ).mean(),
+        2
+    )
+)
+
+print("\nMatches by competition:")
+print(df["competition"].value_counts())
+
+print("\nData:")
+print(df[[
+    "home",
+    "away",
+    "home_score",
+    "away_score",
+    "status",
+    "competition"
+]])
