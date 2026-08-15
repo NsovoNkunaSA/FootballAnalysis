@@ -9,4 +9,5 @@ connection = mysql.connector.connect(
 
 print("Connected to MySQL successfully!")
 
+
 connection.close()
