@@ -2,9 +2,6 @@ import requests
 import pandas as pd
 import mysql.connector
 
-# -----------------------------
-# 1. Get matches from SportScore
-# -----------------------------
 
 url = "https://sportscore.com/api/widget/matches/"
 
@@ -45,9 +42,6 @@ df["time"] = pd.to_datetime(
 print(f"Retrieved {len(df)} matches from SportScore.")
 
 
-# -----------------------------
-# 2. Connect to MySQL
-# -----------------------------
 
 connection = mysql.connector.connect(
     host="localhost",
@@ -61,9 +55,6 @@ cursor = connection.cursor()
 print("Connected to MySQL.")
 
 
-# -----------------------------
-# 3. Create table
-# -----------------------------
 
 create_table_query = """
 CREATE TABLE IF NOT EXISTS matches (
@@ -81,10 +72,6 @@ CREATE TABLE IF NOT EXISTS matches (
 
 cursor.execute(create_table_query)
 
-
-# -----------------------------
-# 4. Insert or update matches
-# -----------------------------
 
 insert_query = """
 INSERT INTO matches (
