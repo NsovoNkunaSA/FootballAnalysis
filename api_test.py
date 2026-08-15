@@ -8,6 +8,7 @@ params = {
     "limit": 10
 }
 
+
 response = requests.get(
     url,
     params=params,
