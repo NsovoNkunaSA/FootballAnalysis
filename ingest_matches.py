@@ -33,7 +33,7 @@ df["away_score"] = pd.to_numeric(
     errors="coerce"
 )
 
-# Convert API time to MySQL-compatible datetime
+
 df["time"] = pd.to_datetime(
     df["time"],
     errors="coerce"
@@ -42,18 +42,16 @@ df["time"] = pd.to_datetime(
 print(f"Retrieved {len(df)} matches from SportScore.")
 
 
-
 connection = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="password",
+    password="PASSWORD_HERE",  
     database="football_analysis"
 )
 
 cursor = connection.cursor()
 
 print("Connected to MySQL.")
-
 
 
 create_table_query = """
@@ -72,6 +70,10 @@ CREATE TABLE IF NOT EXISTS matches (
 
 cursor.execute(create_table_query)
 
+
+# -----------------------------
+# 4. Insert or update matches
+# -----------------------------
 
 insert_query = """
 INSERT INTO matches (
