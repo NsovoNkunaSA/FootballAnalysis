@@ -1,24 +1,42 @@
-CREATE DATABASE football_analysis;
-CREATE DATABASE IF NOT EXISTS football_analysis;
-
 USE football_analysis;
-
-
-DROP TABLE IF EXISTS matches;
-
-CREATE TABLE matches (
-    match_url VARCHAR(500) PRIMARY KEY,
-    home_team VARCHAR(255),
-    away_team VARCHAR(255),
-    home_score INT NULL,
-    away_score INT NULL,
-    status VARCHAR(50),
-    status_text VARCHAR(100),
-    match_time DATETIME,
-    competition VARCHAR(255)
-);
-
-DESCRIBE matches;
 
 SELECT COUNT(*) AS total_matches
 FROM matches;
+
+SELECT competition, COUNT(*) AS total_matches
+FROM matches
+GROUP BY competition
+ORDER BY total_matches DESC;
+
+SELECT SUM(COALESCE(home_score, 0) + COALESCE(away_score, 0)) AS total_goals
+FROM matches;
+
+SELECT AVG(COALESCE(home_score, 0) + COALESCE(away_score, 0)) AS average_goals_per_match
+FROM matches;
+
+SELECT match_url, home_team, away_team, home_score, away_score,
+       home_score + away_score AS total_goals
+FROM matches
+ORDER BY total_goals DESC
+LIMIT 10;
+
+SELECT
+    SUM(CASE WHEN home_score > away_score THEN 1 ELSE 0 END) AS home_wins,
+    SUM(CASE WHEN away_score > home_score THEN 1 ELSE 0 END) AS away_wins,
+    SUM(CASE WHEN home_score = away_score THEN 1 ELSE 0 END) AS draws
+FROM matches;
+
+SELECT
+    100.0 * SUM(CASE WHEN home_score > away_score THEN 1 ELSE 0 END)
+    / COUNT(*) AS home_win_percentage
+FROM matches;
+
+SELECT
+    SUM(COALESCE(home_score, 0)) AS home_goals,
+    SUM(COALESCE(away_score, 0)) AS away_goals
+FROM matches;
+
+SELECT status, COUNT(*) AS total_matches
+FROM matches
+GROUP BY status
+ORDER BY total_matches DESC;
